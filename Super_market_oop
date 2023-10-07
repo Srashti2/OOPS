@@ -1,0 +1,64 @@
+import emoji
+
+inventory={"product":{"soap":{"quantity":30,"price":20},"banana":{"quantity":0,"price":20},"paneer":{"quantity":30,"price":100},"milk":{"quantity":60,"price":50}}}
+cart=[]
+global stock
+from emoji import emojize
+class supermarket:
+
+    def __init__(self):
+        pass
+    def quantity_checks(self,item):
+        try:
+            global stock
+            stock=inventory["product"][item]['quantity']
+            if stock >0 :
+                    print(f"\nits available,and only {stock} are left.")
+                    print(emoji.emojize(':thumbs_up:'))
+                    return self.add_to_cart(item)
+            else:
+                    print("\nsorry its not in stock")
+                    print(emoji.emojize(':thumbs_down:'))
+
+        except KeyError: #if any product is not available in inventory then it should ask the user again that what they would like to buy
+            print("\nIt's not available")
+            print(emoji.emojize(':thumbs_down:'))
+
+    def add_to_cart(self,item):
+        # cart=[{"buy_item": 0}]
+        order_quantity = int(input("\nPlease tell how much/many would you like to buy?"))
+        mrp= inventory["product"][item]['price']
+        order_total= mrp*order_quantity
+        global stock
+        #only when inventory is more than what is being ordered by customer then only order will be fulfilled
+        if order_quantity<= stock:
+            cart.append({item:order_total})
+            inventory["product"][item]['quantity']-= order_quantity
+            #reducing the inventory as and when a product is bought by the customer
+            print("\nIt's added in your cart!")
+            print(cart)
+        else:
+            print("\nWe don't have sufficient stock!")
+
+    def make_payment(self):
+        order_payment=0
+        for i in cart:
+            order_payment+=sum(i.values())
+        print(cart)
+        print(f"Your order total would be ${order_payment}") #it should take order total of multiple orders
+
+    # def add_inventory(self,item_added,quantity_added):
+
+
+order=supermarket()
+
+shopping= True
+while shopping :
+    print(inventory["product"].keys())
+    order_item=input("\nPlease let us know what would you like to buy today?").lower()
+    order.quantity_checks(order_item)
+    answer = input("\nWould you like to checkout?").lower()
+    if answer == "yes":
+        shopping=False
+        order.make_payment()
+        print("Goodbye! Do visit us again")
