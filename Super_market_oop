@@ -26,19 +26,23 @@ class supermarket:
 
     def add_to_cart(self,item):
         # cart=[{"buy_item": 0}]
-        order_quantity = int(input("\nPlease tell how much/many would you like to buy?"))
-        mrp= inventory["product"][item]['price']
-        order_total= mrp*order_quantity
-        global stock
-        #only when inventory is more than what is being ordered by customer then only order will be fulfilled
-        if order_quantity<= stock:
-            cart.append({item:order_total})
-            inventory["product"][item]['quantity']-= order_quantity
-            #reducing the inventory as and when a product is bought by the customer
-            print("\nIt's added in your cart!")
-            print(cart)
-        else:
-            print("\nWe don't have sufficient stock!")
+        try:
+            order_quantity = int(input("\nPlease tell how much/many would you like to buy?"))
+            mrp= inventory["product"][item]['price']
+            order_total= mrp*order_quantity
+            global stock
+            #only when inventory is more than what is being ordered by customer then only order will be fulfilled
+
+            if order_quantity <= stock:
+                cart.append({item: order_total})
+                inventory["product"][item]['quantity'] -= order_quantity
+                # reducing the inventory as and when a product is bought by the customer
+                print("\nIt's added in your cart!")
+                print(cart)
+            else:
+                print("\nWe don't have sufficient stock!")
+        except ValueError:
+            print("\nPlease enter a number!")
 
     def make_payment(self):
         order_payment=0
@@ -57,8 +61,9 @@ while shopping :
     print(inventory["product"].keys())
     order_item=input("\nPlease let us know what would you like to buy today?").lower()
     order.quantity_checks(order_item)
-    answer = input("\nWould you like to checkout?").lower()
+    answer = input("\nWould you like to checkout?yes or no").lower()
     if answer == "yes":
         shopping=False
         order.make_payment()
         print("Goodbye! Do visit us again")
+
